@@ -33,7 +33,10 @@
             @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
 
             /* 登录页背景柔光 */
-            #login-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+            #login-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; opacity: 0; transition: opacity 1.4s ease; }
+            /* The backdrop fades in only after the handwritten "QQ Web Chat" title finishes. */
+            body.bg-revealed #login-bg { opacity: 1; }
+            @media (prefers-reduced-motion: reduce) { #login-bg { transition: none; } }
             #login-bg .blob { position: absolute; border-radius: 9999px; filter: blur(70px); opacity: .28; animation: blobFloat 16s ease-in-out infinite alternate; }
             #login-bg-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.8s ease; pointer-events: none; }
             body > #login-bg-img { position: fixed; z-index: 0; }
@@ -493,6 +496,7 @@
         $('quote-preview').classList.add('hidden');
         $('file-preview-area').classList.add('hidden');
         showLogin();
+        revealBackground();
         if (window.__nestStart) window.__nestStart();
     }
 
@@ -999,21 +1003,28 @@
         else setTimeout(reveal, 4000);
     }
 
+    function revealBackground() {
+        document.body.classList.add('bg-revealed');
+    }
+
     function animateTitleStrokes() {
         var svg = $('login-title-svg');
         if (!svg) return;
         svg.style.opacity = '1';
-        if (reducedMotion() || !svg.animate) return;
+        if (reducedMotion() || !svg.animate) { revealBackground(); return; }
         var TOTAL_MS = 3000, GAP = 25;
         var items = Array.prototype.map.call(svg.querySelectorAll('path'), function (p) {
             var len = 0;
             try { len = p.getTotalLength(); } catch (e) {}
             return { p: p, len: len };
         }).filter(function (i) { return i.len > 0; });
-        if (!items.length) return;
+        if (!items.length) { revealBackground(); return; }
         var sum = items.reduce(function (a, i) { return a + i.len; }, 0);
         var drawBudget = TOTAL_MS - GAP * (items.length - 1);
-        setTimeout(function () { svg.classList.add('title-pink'); }, TOTAL_MS + 120);
+        setTimeout(function () {
+            svg.classList.add('title-pink');
+            revealBackground();
+        }, TOTAL_MS + 120);
         setTimeout(function () {
             svg.classList.remove('title-pink');
             svg.classList.add('title-bold');
@@ -1157,6 +1168,7 @@
     function start() {
         bind();
         applyTheme();
+        if (data.authed) revealBackground();
         primeNotifySound();
         renderContacts();
         if (data.authed) {
