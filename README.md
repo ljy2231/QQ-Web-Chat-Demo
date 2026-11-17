@@ -2,6 +2,8 @@
 
 QQ Web Chat 的高保真纯静态界面演示，单文件 `index.html`，通过 GitHub Pages 发布。
 
+**在线地址：https://ljy2231.github.io/QQ-Web-Chat-Demo/**
+
 **演示密码：`admin`**
 
 - 不连接 QQ、NapCat 或任何后端，不会真实发送消息。
