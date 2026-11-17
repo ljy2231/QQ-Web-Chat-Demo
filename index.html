@@ -1,37 +1,974 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>聊天界面 · 本机演示</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QQ Web Chat</title>
 <style>
-*{box-sizing:border-box} :root{font-family:system-ui,-apple-system,"Microsoft YaHei",sans-serif;color:#334155;background:#e9eef5} body{margin:0} button,input,textarea{font:inherit} button{cursor:pointer} button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #93c5fd;outline-offset:2px} [hidden]{display:none!important}
-.login{position:fixed;inset:0;z-index:5;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 15% 15%,#cfe4ff,transparent 36%),radial-gradient(circle at 85% 80%,#fbe1ed,transparent 36%),#f4f6fa}.login-inner{width:min(100%,400px);text-align:center}.brand{font-size:36px;letter-spacing:.03em;font-weight:300;color:#1e293b;margin:0 0 12px}.subtitle{color:#64748b;font-size:14px;margin-bottom:32px}.card{background:#ffffffd9;border:1px solid #fff;border-radius:20px;padding:32px;box-shadow:0 20px 60px #64748b24;text-align:left}.card h2{margin:0 0 10px;font-size:20px}.muted{color:#64748b;font-size:13px;line-height:1.6}.card label,.settings label{display:block;font-size:13px;font-weight:600;margin:16px 0 7px}.field{width:100%;border:1px solid #dbe3ed;border-radius:10px;padding:11px;background:#fff;color:#334155}.primary{background:#5895ed;color:white;border:0;border-radius:9px;padding:10px 18px;font-weight:600}.login .primary{width:100%;margin-top:16px;background:#e989ae}.notice{font-size:12px;line-height:1.5;color:#91622a;background:#fff7e8;padding:9px 12px;border-bottom:1px solid #f5e4c5}.app{height:100dvh;display:flex;flex-direction:column;max-width:1600px;margin:auto;background:white;box-shadow:0 0 50px #64748b17}.workspace{display:flex;flex:1;min-height:0}.sidebar{width:288px;flex:none;border-right:1px solid #e5eaf0;display:flex;flex-direction:column;background:#fff}.side-head,.chat-head{height:64px;padding:0 18px;border-bottom:1px solid #e8edf3;display:flex;align-items:center;gap:10px;flex:none}.dot{width:9px;height:9px;border-radius:50%;background:#8bb7ee}.side-head strong{font-size:14px}.side-head small{margin-left:auto;color:#94a3b8}.contacts{overflow:auto;flex:1;padding:10px}.contact{display:flex;align-items:center;gap:11px;width:100%;border:0;background:transparent;text-align:left;padding:11px;border-radius:10px;color:inherit}.contact:hover,.contact.active{background:#eef5ff}.avatar{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:#dceafe;color:#4978b7;font-weight:700;flex:none}.contact-info{flex:1;min-width:0}.contact-name{font-size:14px;font-weight:650}.preview{font-size:12px;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px}.badge{background:#ef7486;color:#fff;border-radius:20px;min-width:20px;text-align:center;padding:2px 5px;font-size:11px}.side-foot{padding:12px;border-top:1px solid #edf1f5;display:flex;gap:8px}.soft{border:1px solid #e1e8f0;background:white;border-radius:8px;padding:8px 11px;color:#64748b;font-size:12px}.side-foot .soft:last-child{margin-left:auto}.chat{display:flex;flex:1;min-width:0;flex-direction:column;background:var(--chat-bg,#f7f9fc)}.chat-head{background:#ffffffdf}.chat-head strong{font-size:16px}.chat-head small{display:block;color:#94a3b8;font-size:11px;margin-top:3px}.back{display:none}.messages{flex:1;overflow:auto;padding:24px;display:flex;flex-direction:column;gap:18px}.empty{margin:auto;color:#94a3b8;font-size:14px}.message{display:flex;gap:10px;align-items:flex-start;max-width:80%}.message.mine{align-self:flex-end;flex-direction:row-reverse}.message .avatar{width:34px;height:34px;border-radius:11px;font-size:12px}.message-content{min-width:0}.meta{font-size:11px;color:#94a3b8;margin-bottom:5px}.mine .meta{text-align:right}.bubble{background:#fff;border:1px solid #edf1f5;padding:10px 13px;border-radius:4px 14px 14px 14px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.55}.mine .bubble{background:#dcecff;border-color:#dcecff;border-radius:14px 4px 14px 14px}.quoted{border-left:2px solid #9ab9de;color:#718096;font-size:12px;margin-bottom:8px;padding-left:7px;white-space:pre-wrap;overflow-wrap:anywhere}.actions{display:flex;gap:10px;margin-top:5px}.mine .actions{justify-content:flex-end}.link{background:none;border:0;padding:0;color:#94a3b8;font-size:11px}.link:hover{color:#4384d8}.composer{background:#fff;border-top:1px solid #e8edf3;padding:12px 18px 16px}.quote-bar{display:flex;justify-content:space-between;align-items:center;background:#f3f6fa;color:#64748b;font-size:12px;border-radius:8px;padding:8px 10px;margin-bottom:8px;gap:8px}.quote-bar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.input-row{display:flex;align-items:end;gap:10px;background:#f7f9fc;border:1px solid #e8edf3;border-radius:12px;padding:6px}.input-row textarea{flex:1;min-width:0;resize:vertical;max-height:130px;border:0;background:transparent;padding:9px;outline:none}.hint{font-size:11px;color:#a1aebd;margin:7px 2px 0}.settings-wrap{position:fixed;inset:0;z-index:10;background:#1e293b66;display:grid;place-items:center;padding:16px}.settings{width:min(100%,570px);max-height:90dvh;overflow:auto;background:#fff;border-radius:18px;padding:24px;box-shadow:0 20px 70px #0f172a44}.settings-header{display:flex;justify-content:space-between;align-items:center}.settings h2{margin:0;font-size:20px}.settings textarea{resize:vertical;min-height:65px}.settings .inline{display:flex;gap:10px;align-items:center}.settings input[type=color]{width:52px;height:36px;border:1px solid #e2e8f0;background:white;border-radius:6px}.settings input[type=checkbox]{width:17px;height:17px}.settings-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:20px}.danger{color:#bd4758}.status{color:#9a641d;font-size:12px;margin-top:10px;min-height:18px}.toast{position:fixed;z-index:20;bottom:24px;left:50%;transform:translateX(-50%);background:#334155;color:white;padding:10px 16px;border-radius:9px;font-size:13px;max-width:90%;text-align:center}
-@media(max-width:700px){.sidebar{width:100%}.chat{display:none}.workspace.open .sidebar{display:none}.workspace.open .chat{display:flex;width:100%}.back{display:block;border:0;background:none;font-size:22px;color:#64748b;padding:0 5px 0 0}.messages{padding:18px 14px}.message{max-width:92%}.notice{font-size:11px}.settings{padding:18px}}
+*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.\!visible{visibility:visible!important}.visible{visibility:visible}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0}.-right-1{right:-.25rem}.-right-2{right:-.5rem}.-top-1{top:-.25rem}.-top-2{top:-.5rem}.bottom-0{bottom:0}.bottom-3{bottom:.75rem}.left-0{left:0}.left-1\/2{left:50%}.right-2{right:.5rem}.top-1\/2{top:50%}.top-24{top:6rem}.z-10{z-index:10}.z-20{z-index:20}.z-\[10000\]{z-index:10000}.z-\[9999\]{z-index:9999}.mb-1{margin-bottom:.25rem}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.ml-2{margin-left:.5rem}.mr-2{margin-right:.5rem}.mr-3{margin-right:.75rem}.mr-4{margin-right:1rem}.mr-6{margin-right:1.5rem}.mt-10{margin-top:2.5rem}.mt-3{margin-top:.75rem}.mt-4{margin-top:1rem}.block{display:block}.inline{display:inline}.flex{display:flex}.inline-flex{display:inline-flex}.table{display:table}.hidden{display:none}.h-0{height:0}.h-1\.5{height:.375rem}.h-10{height:2.5rem}.h-12{height:3rem}.h-14{height:3.5rem}.h-3{height:.75rem}.h-40{height:10rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-8{height:2rem}.h-\[52px\]{height:52px}.h-\[70vh\]{height:70vh}.h-full{height:100%}.h-screen{height:100vh}.max-h-32{max-height:8rem}.max-h-\[200px\]{max-height:200px}.min-h-\[38px\]{min-height:38px}.w-0{width:0}.w-10{width:2.5rem}.w-12{width:3rem}.w-16{width:4rem}.w-3{width:.75rem}.w-40{width:10rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-8{width:2rem}.w-\[88vw\]{width:88vw}.w-\[92vw\]{width:92vw}.w-auto{width:auto}.w-full{width:100%}.w-screen{width:100vw}.min-w-0{min-width:0}.max-w-\[200px\]{max-width:200px}.max-w-\[560px\]{max-width:560px}.max-w-\[720px\]{max-width:720px}.max-w-\[85\%\]{max-width:85%}.max-w-full{max-width:100%}.max-w-md{max-width:28rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.-translate-x-1\/2{--tw-translate-x:-50%}.-translate-x-1\/2,.-translate-y-1\/2{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-y-1\/2{--tw-translate-y:-50%}.transform{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-context-menu{cursor:context-menu}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;-moz-user-select:none;user-select:none}.resize-none{resize:none}.resize{resize:both}.flex-col{flex-direction:column}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-start{justify-content:flex-start}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:.25rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.space-x-4>:not([hidden])~:not([hidden]){--tw-space-x-reverse:0;margin-right:calc(1rem*var(--tw-space-x-reverse));margin-left:calc(1rem*(1 - var(--tw-space-x-reverse)))}.space-y-1>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.25rem*var(--tw-space-y-reverse))}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem*var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis}.truncate,.whitespace-nowrap{white-space:nowrap}.whitespace-pre-wrap{white-space:pre-wrap}.break-words{overflow-wrap:break-word}.rounded{border-radius:.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-md{border-radius:.375rem}.rounded-xl{border-radius:.75rem}.rounded-b-lg{border-bottom-right-radius:.5rem;border-bottom-left-radius:.5rem}.rounded-tl-sm{border-top-left-radius:.125rem}.rounded-tr-sm{border-top-right-radius:.125rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-l-4{border-left-width:4px}.border-r{border-right-width:1px}.border-t{border-top-width:1px}.border-none{border-style:none}.border-blue-500{--tw-border-opacity:1;border-color:rgb(59 130 246/var(--tw-border-opacity,1))}.border-gray-100{--tw-border-opacity:1;border-color:rgb(243 244 246/var(--tw-border-opacity,1))}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235/var(--tw-border-opacity,1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219/var(--tw-border-opacity,1))}.border-gray-400\/50{border-color:rgba(156,163,175,.5)}.border-white{--tw-border-opacity:1;border-color:rgb(255 255 255/var(--tw-border-opacity,1))}.bg-black\/10{background-color:rgba(0,0,0,.1)}.bg-black\/40{background-color:rgba(0,0,0,.4)}.bg-blue-50{--tw-bg-opacity:1;background-color:rgb(239 246 255/var(--tw-bg-opacity,1))}.bg-blue-500{--tw-bg-opacity:1;background-color:rgb(59 130 246/var(--tw-bg-opacity,1))}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246/var(--tw-bg-opacity,1))}.bg-gray-200{--tw-bg-opacity:1;background-color:rgb(229 231 235/var(--tw-bg-opacity,1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251/var(--tw-bg-opacity,1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94/var(--tw-bg-opacity,1))}.bg-red-500{--tw-bg-opacity:1;background-color:rgb(239 68 68/var(--tw-bg-opacity,1))}.bg-transparent{background-color:transparent}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.bg-yellow-500{--tw-bg-opacity:1;background-color:rgb(234 179 8/var(--tw-bg-opacity,1))}.object-contain{-o-object-fit:contain;object-fit:contain}.object-cover{-o-object-fit:cover;object-fit:cover}.p-1{padding:.25rem}.p-1\.5{padding:.375rem}.p-10{padding:2.5rem}.p-2{padding:.5rem}.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.px-1{padding-left:.25rem;padding-right:.25rem}.px-1\.5{padding-left:.375rem;padding-right:.375rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-3{padding-top:.75rem}.pb-3,.py-3{padding-bottom:.75rem}.text-left{text-align:left}.text-center{text-align:center}.font-sans{font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji}.text-2xl{font-size:1.5rem;line-height:2rem}.text-\[10px\]{font-size:10px}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.text-blue-500{--tw-text-opacity:1;color:rgb(59 130 246/var(--tw-text-opacity,1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235/var(--tw-text-opacity,1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175/var(--tw-text-opacity,1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128/var(--tw-text-opacity,1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99/var(--tw-text-opacity,1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81/var(--tw-text-opacity,1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55/var(--tw-text-opacity,1))}.text-green-600{--tw-text-opacity:1;color:rgb(22 163 74/var(--tw-text-opacity,1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68/var(--tw-text-opacity,1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.text-yellow-600{--tw-text-opacity:1;color:rgb(202 138 4/var(--tw-text-opacity,1))}.underline{text-decoration-line:underline}.opacity-50{opacity:.5}.opacity-90{opacity:.9}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgba(0,0,0,.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color)}.shadow-2xl,.shadow-md{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color),0 2px 4px -2px var(--tw-shadow-color)}.shadow-none{--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000}.shadow-none,.shadow-sm{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgba(0,0,0,.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color),0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.outline-none{outline:2px solid transparent;outline-offset:2px}.blur{--tw-blur:blur(8px)}.blur,.drop-shadow{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.drop-shadow{--tw-drop-shadow:drop-shadow(0 1px 2px rgba(0,0,0,.1)) drop-shadow(0 1px 1px rgba(0,0,0,.06))}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-filter{-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-colors{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.duration-300{transition-duration:.3s}.ease-in-out{transition-timing-function:cubic-bezier(.4,0,.2,1)}.hover\:border-red-300:hover{--tw-border-opacity:1;border-color:rgb(252 165 165/var(--tw-border-opacity,1))}.hover\:bg-blue-600:hover{--tw-bg-opacity:1;background-color:rgb(37 99 235/var(--tw-bg-opacity,1))}.hover\:bg-gray-100:hover{--tw-bg-opacity:1;background-color:rgb(243 244 246/var(--tw-bg-opacity,1))}.hover\:bg-gray-50:hover{--tw-bg-opacity:1;background-color:rgb(249 250 251/var(--tw-bg-opacity,1))}.hover\:bg-red-600:hover{--tw-bg-opacity:1;background-color:rgb(220 38 38/var(--tw-bg-opacity,1))}.hover\:text-gray-600:hover{--tw-text-opacity:1;color:rgb(75 85 99/var(--tw-text-opacity,1))}.hover\:text-gray-700:hover{--tw-text-opacity:1;color:rgb(55 65 81/var(--tw-text-opacity,1))}.hover\:text-gray-800:hover{--tw-text-opacity:1;color:rgb(31 41 55/var(--tw-text-opacity,1))}.hover\:text-red-500:hover{--tw-text-opacity:1;color:rgb(239 68 68/var(--tw-text-opacity,1))}.hover\:opacity-100:hover{opacity:1}.focus\:border-blue-500:focus{--tw-border-opacity:1;border-color:rgb(59 130 246/var(--tw-border-opacity,1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.focus\:ring-blue-200:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(191 219 254/var(--tw-ring-opacity,1))}.disabled\:opacity-50:disabled{opacity:.5}@media (min-width:768px){.md\:relative{position:relative}.md\:top-32{top:8rem}.md\:flex{display:flex}.md\:hidden{display:none}.md\:h-\[58px\]{height:58px}.md\:max-h-60{max-height:15rem}.md\:w-72{width:18rem}.md\:max-w-\[75\%\]{max-width:75%}.md\:p-6{padding:1.5rem}.md\:px-4{padding-left:1rem;padding-right:1rem}.md\:px-6{padding-left:1.5rem;padding-right:1.5rem}.md\:py-2{padding-top:.5rem;padding-bottom:.5rem}.md\:text-xs{font-size:.75rem;line-height:1rem}}
+</style>
+<style>
+::-webkit-scrollbar { width: 6px; height: 6px; }
+            ::-webkit-scrollbar-track { background: transparent; }
+            ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+            .context-menu { display: none; position: fixed; background: white; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; min-width: 90px; white-space: nowrap; overflow: hidden;}
+            .context-menu.show { display: block; }
+            .ctx-item { padding: 10px 20px; font-size: 14px; cursor: pointer; color: #374151; transition: background 0.2s; text-align: center;}
+            .ctx-item:hover { background: #f3f4f6; }
+            .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 8px; font-size: 14px; z-index: 9999; transition: opacity 0.3s; }
+
+            #drop-overlay { position: fixed; inset: 0; background: rgba(59,130,246,0.2); border: 4px dashed #3b82f6; z-index: 9998; display: none; align-items: center; justify-content: center; pointer-events: none; }
+            #drop-overlay.show { display: flex; }
+            /* 登录标题手写笔画动画 + 写完后发光变粗 */
+            #login-title-svg { transition: filter 0.7s ease; opacity: 0; }
+            #login-title-svg path { fill: none; stroke: #1f2937; stroke-width: 0.7; stroke-linecap: round; stroke-linejoin: round; transition: stroke-width 0.8s ease; }
+            /* 写完变粗：直接上粉光，无蓝光阶段 */
+            #login-title-svg.title-pink path,
+            #login-title-svg.title-bold path { stroke-width: 1.35; }
+            #login-title-svg.title-pink { filter: drop-shadow(0 0 5px rgba(244,114,182,0.40)) drop-shadow(0 0 12px rgba(244,114,182,0.16)); }
+            /* 加粗完成后：光完全消失 */
+            #login-title-svg.title-bold { filter: none; }
+            /* 标题写完后，登录框从下方渐变浮出 */
+            #login-card { pointer-events: none; opacity: 0; transform: translateY(34px); animation: cardIn 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 3s forwards; background-color: rgba(255,255,255,.55); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-color: rgba(255,255,255,.65); }
+            @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
+
+            /* 登录页背景柔光 */
+            #login-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+            #login-bg .blob { position: absolute; border-radius: 9999px; filter: blur(70px); opacity: .28; animation: blobFloat 16s ease-in-out infinite alternate; }
+            #login-bg-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.8s ease; }
+            #login-bg-mask { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(243,244,246,.12), rgba(243,244,246,.26)); }
+            #bg-error { position: absolute; top: 14px; left: 16px; z-index: 20; font-size: 12px; color: #ef4444; opacity: 0; transition: opacity .3s ease; pointer-events: none; }
+            #bg-error.show { opacity: 1; }
+            #login-footer { position: absolute; bottom: 14px; left: 0; right: 0; text-align: center; font-size: 11px; letter-spacing: .02em; color: rgba(31,41,55,.35); pointer-events: none; z-index: 20; }
+            #login-canvas { position: absolute; inset: 0; display: block; }
+            #login-bg .blob-a { width: 380px; height: 380px; background: rgba(59,130,246,.20); top: -70px; left: -60px; }
+            #login-bg .blob-b { width: 420px; height: 420px; background: rgba(244,114,182,.15); bottom: -110px; right: -70px; animation-delay: -8s; }
+            @keyframes blobFloat { from { transform: translate3d(0,0,0) scale(1); } to { transform: translate3d(50px,36px,0) scale(1.18); } }
+
+            /* 登录框内容依次浮现 */
+            #login-card > * { opacity: 0; transform: translateY(8px); animation: cardItemIn .55s ease forwards; }
+            #login-card > h2 { animation-delay: 3.2s; }
+            #login-card > input { animation-delay: 3.34s; }
+            #login-card > button { animation-delay: 3.46s; }
+            #login-card > #login-error { animation-delay: 3.5s; }
+            @keyframes cardItemIn { to { opacity: 1; transform: translateY(0); } }
+
+            /* 按钮质感 */
+            #login-btn { background-color: rgba(244,114,182,.78); box-shadow: 0 6px 18px -6px rgba(244,114,182,.50); transition: transform .15s ease, box-shadow .25s ease, background-color .25s ease; }
+            #login-btn:hover { background-color: rgba(244,114,182,.92); box-shadow: 0 10px 24px -8px rgba(244,114,182,.60); }
+            #login-btn:active { transform: scale(.985); }
+            /* 深色主题 */
+            body.theme-dark { background:#0f1115 !important; color:#e5e7eb !important; }
+            body.theme-dark .bg-white { background-color:#171a21 !important; }
+            body.theme-dark .bg-gray-50 { background-color:#1b1f27 !important; }
+            body.theme-dark .bg-gray-100 { background-color:#0f1115 !important; }
+            body.theme-dark .bg-gray-200 { background-color:#252a33 !important; }
+            body.theme-dark .text-gray-800 { color:#e5e7eb !important; }
+            body.theme-dark .text-gray-700 { color:#dfe3e8 !important; }
+            body.theme-dark .text-gray-600 { color:#b6bcc6 !important; }
+            body.theme-dark .text-gray-500 { color:#9aa1ac !important; }
+            body.theme-dark .text-gray-400 { color:#8a919c !important; }
+            body.theme-dark .border-gray-200 { border-color:#2a2f3a !important; }
+            body.theme-dark .border-gray-300 { border-color:#363c48 !important; }
+            body.theme-dark .hover\:bg-gray-100:hover { background-color:#20242c !important; }
+            body.theme-dark input, body.theme-dark textarea { background-color:#11151b !important; color:#e5e7eb !important; border-color:#2a2f3a !important; }
+            body.theme-dark .settings-panel { background-color:#171a21 !important; border-color:#2a2f3a !important; }
+            body.chat-bg-on { background-size: cover !important; background-position: center !important; background-attachment: fixed !important; }
+            body.chat-bg-on #sidebar .bg-white, body.chat-bg-on #chat-area .bg-white { background-color: rgba(255,255,255,.28) !important; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+            body.chat-bg-on #sidebar .bg-gray-50, body.chat-bg-on #chat-area .bg-gray-50 { background-color: rgba(255,255,255,.08) !important; }
+            body.chat-bg-on #sidebar .bg-gray-100, body.chat-bg-on #chat-area .bg-gray-100 { background-color: transparent !important; }
+            body.chat-bg-on #sidebar { background-color: rgba(255,255,255,.10) !important; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+            body.chat-bg-on #sidebar .bg-gray-50 { background-color: transparent !important; }
+            body.chat-bg-on #chat-area { background-color: transparent !important; }
+            body.chat-bg-on #messages { background: transparent !important; }
+            body.theme-dark.chat-bg-on #sidebar .bg-white, body.theme-dark.chat-bg-on #chat-area .bg-white { background-color: rgba(17,21,27,.42) !important; }
+            body.theme-dark.chat-bg-on #sidebar .bg-gray-50, body.theme-dark.chat-bg-on #chat-area .bg-gray-50 { background-color: rgba(17,21,27,.18) !important; }
+            body.theme-dark.chat-bg-on #sidebar .bg-gray-100, body.theme-dark.chat-bg-on #chat-area .bg-gray-100 { background-color: transparent !important; }
+            body.theme-dark.chat-bg-on #sidebar { background-color: rgba(17,21,27,.28) !important; }
+            body.chat-bg-on { background-image: var(--chat-wallpaper) !important; }
+            #save-wallpaper-btn { position: fixed; top: 12px; right: 12px; z-index: 30; height: 32px; padding: 0 12px; border: 1px solid rgba(156,163,175,.55); border-radius: 8px; background: rgba(255,255,255,.80); color: #374151; font-size: 12px; cursor: pointer; }
+            #save-wallpaper-btn[hidden] { display: none !important; }
+            #save-wallpaper-btn:disabled { opacity: .55; cursor: default; }
+            body.theme-dark #save-wallpaper-btn { background: rgba(23,26,33,.85); color: #e5e7eb; }
+            body.wallpaper-save-visible #chat-area > div:first-child { padding-right: 112px; }
+            @media (max-width: 767px) { body.wallpaper-save-visible #sidebar > div:first-child { padding-right: 112px; } }
+        @media (prefers-reduced-motion: reduce) { #login-card, #login-card > * { animation: none; opacity: 1; transform: none; pointer-events: auto; } #login-bg .blob { animation: none; } }
+.send-state { margin: 6px 0; padding: 4px; } .send-state button { margin-left: 8px; text-decoration: underline; }
+
 </style>
 </head>
-<body>
-<section class="login" id="login"><div class="login-inner"><h1 class="brand">QQ Web Chat</h1><p class="subtitle">一个轻量的聊天界面演示</p><div class="card"><h2>进入演示</h2><p class="muted">无需账号或密码。请勿输入真实账号、密码或敏感信息。</p><label for="nickname">演示昵称（可选）</label><input class="field" id="nickname" maxlength="30" placeholder="例如：我"><button class="primary" id="enter">进入本机演示</button><p class="muted">所有消息仅保存在本机演示，不连接 QQ，也不会发送给任何人。</p></div></div></section>
-<div class="app"><div class="notice">本机模拟演示 · 所有消息仅本机演示，不连接 QQ，不会实际发送。请勿输入真实账号、密码或敏感信息。<span id="storageNotice"></span></div><div class="workspace" id="workspace"><aside class="sidebar"><div class="side-head"><span class="dot"></span><strong>本机演示</strong><small>未连接网络</small></div><div class="contacts" id="contacts"></div><div class="side-foot"><button class="soft" id="logout">退出演示</button><button class="soft" id="reset">重置示例</button><button class="soft" id="openSettings">设置</button></div></aside><main class="chat"><header class="chat-head"><button class="back" id="back" aria-label="返回会话列表">‹</button><div><strong id="chatName">选择会话</strong><small>仅本机模拟 · 不连接 QQ</small></div></header><div class="messages" id="messages" aria-live="polite"></div><div class="composer"><div class="quote-bar" id="quoteBar" hidden><span id="quoteText"></span><button class="link" id="cancelQuote" aria-label="取消引用">✕</button></div><div class="input-row"><textarea id="input" rows="2" maxlength="4000" placeholder="输入本机演示消息…"></textarea><button class="primary" id="send">添加消息</button></div><p class="hint">Enter 添加 · Shift + Enter 换行；内容不会实际发送</p></div></main></div></div>
-<div class="settings-wrap" id="settingsWrap" hidden><section class="settings" role="dialog" aria-modal="true" aria-labelledby="settingsTitle"><div class="settings-header"><h2 id="settingsTitle">演示设置</h2><button class="soft" id="closeSettings" aria-label="关闭设置">关闭</button></div><p class="muted">以下名单仅作为本机界面配置示例，不会控制真实账号、消息或权限。每行一项。</p><label for="whitelist">白名单（演示）</label><textarea class="field" id="whitelist" maxlength="2000"></textarea><label for="blacklist">黑名单（演示）</label><textarea class="field" id="blacklist" maxlength="2000"></textarea><label for="admins">管理员（演示）</label><textarea class="field" id="admins" maxlength="2000"></textarea><label for="background">聊天背景颜色</label><input type="color" id="background"><label class="inline" for="sound"><input type="checkbox" id="sound">添加消息时播放本机提示音</label><div class="settings-actions"><button class="soft" id="testSound">试听提示音</button><button class="primary" id="saveSettings">保存设置</button></div><p class="status" id="settingsStatus" role="status"></p></section></div><div class="toast" id="toast" role="status" hidden></div>
+<body class="bg-gray-100 h-screen w-screen overflow-hidden flex font-sans text-gray-800">
+
+        <div id="drop-overlay">
+            <div class="bg-white p-6 rounded-xl shadow-2xl text-blue-500 font-bold text-xl flex items-center gap-3">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                松开鼠标上传文件
+            </div>
+        </div>
+
+        <div id="login-overlay" class="fixed inset-0 bg-gray-100 z-[9999] flex items-center justify-center px-4">
+            <div id="login-bg" aria-hidden="true">
+                <img id="login-bg-img" alt="">
+                <div id="login-bg-mask"></div>
+                <canvas id="login-canvas"></canvas>
+                <span class="blob blob-a"></span><span class="blob blob-b"></span>
+            </div>
+            <div id="bg-error">壁纸加载失败</div>
+            <div id="login-footer">QQ Web Chat · 本机界面演示</div>
+            <h1 id="login-title" class="absolute z-10 top-24 md:top-32 left-1/2 -translate-x-1/2 w-[88vw] max-w-[560px] flex justify-center">
+    <svg id="login-title-svg" viewBox="0 0 205 26" class="w-auto h-[52px] md:h-[58px]" role="img" aria-label="QQ Web Chat">
+          <g>
+            <path d="M9,1 L7,2 5,4 4,6 3,9 3,14 4,17 5,19 7,21 9,22 13,22 15,21 17,19 18,17 19,14 19,9 18,6 17,4 15,2 13,1 9,1" transform="translate(4,2)"/>
+            <path d="M12,18 L18,24" transform="translate(4,2)"/>
+            <path d="M9,1 L7,2 5,4 4,6 3,9 3,14 4,17 5,19 7,21 9,22 13,22 15,21 17,19 18,17 19,14 19,9 18,6 17,4 15,2 13,1 9,1" transform="translate(26,2)"/>
+            <path d="M12,18 L18,24" transform="translate(26,2)"/>
+            <path d="M2,1 L7,22" transform="translate(60,2)"/>
+            <path d="M12,1 L7,22" transform="translate(60,2)"/>
+            <path d="M12,1 L17,22" transform="translate(60,2)"/>
+            <path d="M22,1 L17,22" transform="translate(60,2)"/>
+            <path d="M3,14 L15,14 15,12 14,10 13,9 11,8 8,8 6,9 4,11 3,14 3,16 4,19 6,21 8,22 11,22 13,21 15,19" transform="translate(85,2)"/>
+            <path d="M4,1 L4,22" transform="translate(103,2)"/>
+            <path d="M4,11 L6,9 8,8 11,8 13,9 15,11 16,14 16,16 15,19 13,21 11,22 8,22 6,21 4,19" transform="translate(103,2)"/>
+            <path d="M18,6 L17,4 15,2 13,1 9,1 7,2 5,4 4,6 3,9 3,14 4,17 5,19 7,21 9,22 13,22 15,21 17,19 18,17" transform="translate(134,2)"/>
+            <path d="M4,1 L4,22" transform="translate(155,2)"/>
+            <path d="M4,12 L7,9 9,8 12,8 14,9 15,12 15,22" transform="translate(155,2)"/>
+            <path d="M15,8 L15,22" transform="translate(173,2)"/>
+            <path d="M15,11 L13,9 11,8 8,8 6,9 4,11 3,14 3,16 4,19 6,21 8,22 11,22 13,21 15,19" transform="translate(173,2)"/>
+            <path d="M5,1 L5,18 6,21 8,22 10,22" transform="translate(191,2)"/>
+            <path d="M2,8 L9,8" transform="translate(191,2)"/>
+          </g>
+        </svg>
+            </h1>
+            <div id="login-card" class="relative z-10 bg-white p-10 rounded-2xl shadow-xl w-full max-w-md border border-gray-200">
+                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">用户登录</h2>
+                <input type="password" id="login-pwd" class="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all mb-4" placeholder="请输入密码">
+                <button id="login-btn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg transition-colors">登录</button>
+                <p class="text-xs text-gray-400 text-center mt-3">演示密码：admin · 不连接真实服务</p>
+                <p id="login-error" class="text-red-500 text-sm mt-3 text-center hidden" role="status">密码错误，请重试</p>
+                <button id="retry-logout" type="button" hidden class="w-full text-sm mt-3 text-gray-600">重试注销</button>
+            </div>
+        </div>
+
+        <div id="context-menu" class="context-menu">
+            <div id="ctx-reply" class="ctx-item">引用</div>
+            <div id="ctx-recall" class="ctx-item text-red-500 border-t border-gray-100">撤回</div>
+        </div>
+
+        <button id="save-wallpaper-btn" type="button" hidden disabled title="下载当前显示的壁纸">保存壁纸</button>
+
+        <!-- 左侧联系人列表 -->
+        <div id="sidebar" class="w-full md:w-72 bg-white border-r border-gray-200 flex flex-col shrink-0 h-full absolute md:relative z-20">
+            <div class="h-14 border-b border-gray-200 flex items-center px-4 bg-gray-50 shrink-0">
+                <div id="status-dot" class="w-3 h-3 rounded-full bg-red-500 mr-2 shadow-sm shrink-0"></div>
+                <span id="status-text" class="text-sm font-semibold text-gray-600 truncate">本机演示模式</span>
+            </div>
+            <div id="contact-list" class="flex-1 overflow-y-auto p-2 space-y-1">
+                <div class="text-center text-gray-400 text-sm mt-10" id="empty-contact">暂无会话</div>
+            </div>
+            <div class="border-t border-gray-200 bg-gray-50 px-3 py-2 shrink-0 flex items-center justify-between">
+                <button id="logout-btn" type="button" class="px-3 py-1.5 text-xs rounded-md border border-gray-300 text-gray-600 bg-white hover:text-red-500 hover:border-red-300 transition-colors">退出登录</button>
+                <button id="refresh-bg-btn" type="button" class="text-xs text-gray-400 hover:text-gray-600 transition-colors">随机壁纸</button>
+                <button id="settings-btn" type="button" class="text-xs text-gray-400 hover:text-gray-600 transition-colors">设置</button>
+            </div>
+        </div>
+
+        <!-- 右侧聊天区域 -->
+        <div id="chat-area" class="hidden md:flex flex-1 flex-col h-full bg-gray-50 relative overflow-hidden w-full">
+            <div class="h-14 border-b border-gray-200 flex items-center px-4 md:px-6 bg-white shrink-0 shadow-sm z-10">
+                <button id="back-btn" class="md:hidden mr-3 text-gray-500 hover:text-gray-700 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <span class="text-lg font-bold text-gray-700 truncate" id="current-chat-name">请选择联系人</span>
+            </div>
+
+            <div id="message-area" class="flex-1 h-0 overflow-y-auto p-4 md:p-6 space-y-4" onscroll="hideContextMenu()"></div>
+
+            <div id="quote-preview" class="hidden w-full bg-gray-100 border-t border-gray-200 px-4 py-2 flex justify-between items-center shrink-0">
+                <div class="text-xs text-gray-500 truncate" id="quote-text">正在引用...</div>
+                <button id="cancel-quote" class="text-gray-400 hover:text-gray-600 text-lg ml-2">&times;</button>
+            </div>
+
+            <!-- 附件预览区 -->
+            <div id="file-preview-area" class="hidden w-full bg-gray-100 border-t border-gray-200 px-4 py-2 flex items-center shrink-0">
+                <div class="relative inline-flex items-center bg-white p-2 rounded-lg border border-gray-300 shadow-sm max-w-full pb-3">
+                    <img id="preview-img" class="h-12 w-12 rounded object-contain mr-2 hidden">
+                    <div id="preview-file-icon" class="w-10 h-10 flex items-center justify-center text-blue-500 mr-2 hidden">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div class="flex flex-col overflow-hidden max-w-[200px] mr-4">
+                        <span id="preview-filename" class="text-sm truncate font-medium text-gray-700">filename.ext</span>
+                        <span id="preview-filesize" class="text-xs text-gray-400">0 KB</span>
+                    </div>
+                    <span id="preview-percent" class="text-xs text-blue-500 font-bold absolute right-2 bottom-3 hidden">0%</span>
+                    <button id="cancel-file" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-md hover:bg-red-600">&times;</button>
+                    <!-- 加粗进度条 -->
+                    <div class="absolute bottom-0 left-0 w-full h-1.5 bg-gray-200 rounded-b-lg overflow-hidden">
+                        <div id="upload-progress-bar" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 底部工具栏 + 输入框 -->
+            <div class="w-full bg-white border-t border-gray-200 px-2 md:px-4 py-2 shrink-0 z-10 flex flex-col gap-1">
+
+                <!-- 工具栏 -->
+                <div class="flex items-center space-x-4 px-2 text-gray-500 select-none">
+                    <button id="btn-image" class="hover:text-gray-800 transition-colors flex items-center" title="上传图片">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </button>
+                    <button id="btn-file" class="hover:text-gray-800 transition-colors flex items-center" title="上传文件">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+                    </button>
+                    <input type="file" id="image-input" class="hidden" accept="image/*">
+                    <input type="file" id="file-input" class="hidden">
+                </div>
+
+                <!-- 输入与发送 -->
+                <div class="flex items-end bg-gray-50 border border-gray-200 rounded-xl p-1.5">
+                    <textarea id="input-box" rows="1" class="flex-1 w-0 bg-transparent outline-none resize-none px-3 py-2 text-sm max-h-32 min-h-[38px]" placeholder="输入消息..." disabled></textarea>
+                    <button id="send-btn" class="shrink-0 w-16 h-10 ml-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg text-sm font-semibold disabled:opacity-50 whitespace-nowrap" disabled>发送</button>
+                </div>
+            </div>
+        </div>
+
 <script>
-(function(){
-'use strict';
-const KEY='qq-webchat-static-demo.v1';
-const $=id=>document.getElementById(id);
-const defaults=()=>({version:1,nickname:'我',selected:'c1',settings:{whitelist:'',blacklist:'',admins:'',background:'#f7f9fc',sound:false},contacts:[{id:'c1',name:'小林（示例）',unread:0,messages:[{id:'m1',from:'them',text:'你好！这是本机演示会话。',time:'10:18'},{id:'m2',from:'me',text:'你好，这里不会连接真实聊天服务。',time:'10:20'}]},{id:'c2',name:'项目小组（示例）',unread:2,messages:[{id:'m3',from:'them',text:'欢迎体验演示，点击会话可清除未读。',time:'09:30'},{id:'m4',from:'them',text:'消息、名单和设置都只在本机。',time:'09:32'}]},{id:'c3',name:'小雨（示例）',unread:1,messages:[{id:'m5',from:'them',text:'可以试试引用和撤回功能。',time:'昨天'}]}]});
-let storageAvailable=true;
-function load(){try{const raw=localStorage.getItem(KEY);if(!raw)return defaults();const x=JSON.parse(raw);if(!x||x.version!==1||!Array.isArray(x.contacts)||!x.settings||!x.contacts.every(c=>c&&typeof c.id==='string'&&typeof c.name==='string'&&Array.isArray(c.messages)&&c.messages.every(m=>m&&typeof m.text==='string'&&typeof m.id==='string')))throw Error('invalid');return x}catch(e){storageAvailable=false;return defaults()}}
-let state=load(),quote=null,toastTimer;
-function storageNote(){ $('storageNotice').textContent=storageAvailable?'':' 本地存储不可用或数据异常，本次更改可能不会保留。'; }
-function save(){try{localStorage.setItem(KEY,JSON.stringify(state));storageAvailable=true}catch(e){storageAvailable=false}storageNote()}
-function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n}
-function current(){return state.contacts.find(c=>c.id===state.selected)||state.contacts[0]}
-function notify(text){$('toast').textContent=text;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,2600)}
-function setQuote(m){quote=m?{text:m.text,from:m.from==='me'?state.nickname:current().name}:null;$('quoteBar').hidden=!quote;$('quoteText').textContent=quote?'引用 '+quote.from+'：'+quote.text:''}
-function render(){const c=current();if(!c)return;state.selected=c.id;$('chatName').textContent=c.name;document.documentElement.style.setProperty('--chat-bg',/^#[0-9a-f]{6}$/i.test(state.settings.background)?state.settings.background:'#f7f9fc');const list=$('contacts');list.replaceChildren();state.contacts.forEach(item=>{const b=el('button','contact'+(item.id===c.id?' active':''));b.type='button';b.setAttribute('aria-label',item.name+(item.unread?'，未读 '+item.unread+' 条':''));const av=el('span','avatar',item.name.slice(0,1));const info=el('span','contact-info');info.append(el('span','contact-name',item.name));const last=item.messages[item.messages.length-1];info.append(el('div','preview',last?(last.recalled?'消息已撤回':last.text):'暂无消息'));b.append(av,info);if(item.unread)b.append(el('span','badge',String(item.unread)));b.addEventListener('click',()=>{state.selected=item.id;item.unread=0;setQuote(null);$('workspace').classList.add('open');save();render()});list.append(b)});const area=$('messages');area.replaceChildren();if(!c.messages.length)area.append(el('div','empty','还没有消息，添加一条试试'));c.messages.forEach(m=>{const mine=m.from==='me',row=el('div','message'+(mine?' mine':''));row.append(el('div','avatar',mine?state.nickname.slice(0,1):c.name.slice(0,1)));const content=el('div','message-content');content.append(el('div','meta',(mine?state.nickname:c.name)+' · '+(m.time||'')));const bubble=el('div','bubble');if(m.quote&&!m.recalled)bubble.append(el('div','quoted',String(m.quote.from||'')+'：'+String(m.quote.text||'')));bubble.append(el('div','',m.recalled?'这条消息已在本机撤回':m.text));content.append(bubble);if(!m.recalled){const actions=el('div','actions');const reply=el('button','link','引用');reply.addEventListener('click',()=>{setQuote(m);$('input').focus()});actions.append(reply);if(mine){const recall=el('button','link','撤回');recall.addEventListener('click',()=>{m.recalled=true;m.text='';delete m.quote;save();render()});actions.append(recall)}content.append(actions)}row.append(content);area.append(row)});area.scrollTop=area.scrollHeight}
-function sound(){try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)throw Error('unsupported');const ctx=new Audio(),osc=ctx.createOscillator(),gain=ctx.createGain();osc.type='sine';osc.frequency.value=660;gain.gain.setValueAtTime(.05,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.16);osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+.16);osc.onended=()=>ctx.close()}catch(e){notify('浏览器不支持提示音或已阻止播放')}}
-function send(){const input=$('input'),text=input.value.trim(),c=current();if(!text||!c)return;const now=new Date();c.messages.push({id:'m'+Date.now().toString(36)+Math.random().toString(36).slice(2),from:'me',text,time:now.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}),...(quote?{quote:{...quote}}:{})});input.value='';setQuote(null);save();render();if(state.settings.sound)sound()}
-$('enter').addEventListener('click',()=>{state.nickname=$('nickname').value.trim().slice(0,30)||'我';$('login').hidden=true;save();render()});$('nickname').addEventListener('keydown',e=>{if(e.key==='Enter')$('enter').click()});$('logout').addEventListener('click',()=>{$('login').hidden=false;$('nickname').value=state.nickname;$('workspace').classList.remove('open');setQuote(null)});$('send').addEventListener('click',send);$('input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();send()}});$('cancelQuote').addEventListener('click',()=>setQuote(null));$('back').addEventListener('click',()=>$('workspace').classList.remove('open'));
-$('openSettings').addEventListener('click',()=>{const s=state.settings;['whitelist','blacklist','admins'].forEach(k=>$(k).value=typeof s[k]==='string'?s[k]:'');$('background').value=/^#[0-9a-f]{6}$/i.test(s.background)?s.background:'#f7f9fc';$('sound').checked=!!s.sound;$('settingsStatus').textContent='';$('settingsWrap').hidden=false;$('closeSettings').focus()});function closeSettings(){$('settingsWrap').hidden=true;$('openSettings').focus()}$('closeSettings').addEventListener('click',closeSettings);$('settingsWrap').addEventListener('click',e=>{if(e.target===$('settingsWrap'))closeSettings()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('settingsWrap').hidden)closeSettings()});$('testSound').addEventListener('click',sound);$('saveSettings').addEventListener('click',()=>{state.settings={whitelist:$('whitelist').value,blacklist:$('blacklist').value,admins:$('admins').value,background:$('background').value,sound:$('sound').checked};save();render();$('settingsStatus').textContent=storageAvailable?'设置已保存在本机。':'设置仅在当前页面有效，无法写入本地存储。'});$('reset').addEventListener('click',()=>{if(!confirm('重置全部本机示例消息和设置？此操作无法撤销。'))return;state=defaults();setQuote(null);$('input').value='';$('workspace').classList.remove('open');save();render();notify('已重置本机示例数据')});$('nickname').value=typeof state.nickname==='string'?state.nickname:'我';storageNote();render();
+/*
+ * QQ Web Chat static demo.
+ * Pure front-end simulation: no network, no backend, no real accounts.
+ * All user-controlled text is written with textContent.
+ */
+(function () {
+    'use strict';
+
+    var DEMO_PASSWORD = 'admin';
+    var STORE_KEY = 'qqwebchat-demo-v1';
+    var MAX_MESSAGES = 300;
+
+    var $ = function (id) { return document.getElementById(id); };
+
+    function nowTime() {
+        var d = new Date();
+        var p = function (n) { return (n < 10 ? '0' : '') + n; };
+        return p(d.getHours()) + ':' + p(d.getMinutes());
+    }
+
+    function defaultData() {
+        return {
+            authed: false,
+            settings: {
+                whitelist: '10001;20001',
+                blacklist: '',
+                admin: '10000',
+                use_image_host: true,
+                chat_background: false,
+                theme: 'light',
+                sound_enabled: true
+            },
+            unread: {},
+            contacts: [
+                {
+                    id: 'private:10001', peer: '10001', name: '小雨', type: 'private',
+                    avatar: '雨', messages: [
+                        { id: 'm1', from: 'them', text: '你好呀，这是本机演示会话。', time: '10:18' },
+                        { id: 'm2', from: 'me', text: '界面照着正式站做的，但不会连接 QQ。', time: '10:20' },
+                        { id: 'm3', from: 'them', text: '引用、撤回和设置都可以试试。', time: '10:21', quote: { name: '我', text: '界面照着正式站做的，但不会连接 QQ。' } }
+                    ]
+                },
+                {
+                    id: 'group:20001', peer: '20001', name: '项目小组', type: 'group', avatar: '组',
+                    messages: [
+                        { id: 'g1', from: 'them', name: '小林', text: '欢迎大家。', time: '09:30' },
+                        { id: 'g2', from: 'them', name: '阿杰', text: '这是纯静态页面，刷新后会保留本机数据。', time: '09:32' },
+                        { id: 'g3', from: 'me', text: '收到，演示密码是 admin。', time: '09:33' }
+                    ]
+                },
+                {
+                    id: 'private:10002', peer: '10002', name: '阿杰', type: 'private', avatar: '杰',
+                    messages: [
+                        { id: 'j1', from: 'them', text: '图片和文件消息也会以占位形式展示。', time: '昨天' },
+                        { id: 'j2', from: 'them', kind: 'file', fileName: '示例文档.pdf', fileSize: 128 * 1024, text: '[文件] 示例文档.pdf', time: '昨天' }
+                    ]
+                }
+            ]
+        };
+    }
+
+    function loadData() {
+        try {
+            var raw = localStorage.getItem(STORE_KEY);
+            if (!raw) return defaultData();
+            var parsed = JSON.parse(raw);
+            if (!parsed || !Array.isArray(parsed.contacts)) return defaultData();
+            return parsed;
+        } catch (e) {
+            return defaultData();
+        }
+    }
+
+    function saveData() {
+        try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (e) {}
+    }
+
+    var data = loadData();
+    var currentId = null;
+    var quote = null;
+    var pendingFile = null;
+    var unread = data.unread || {};
+
+    /* ---------- small UI helpers ---------- */
+
+    var toastTimer = null;
+    function toast(text) {
+        var el = $('demo-toast');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'demo-toast';
+            el.className = 'toast';
+            document.body.appendChild(el);
+        }
+        el.textContent = text;
+        el.style.opacity = '1';
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () { el.style.opacity = '0'; }, 2000);
+    }
+
+    function playBeep() {
+        if (!data.settings.sound_enabled) return;
+        try {
+            var Ctx = window.AudioContext || window.webkitAudioContext;
+            if (!Ctx) return;
+            var ctx = new Ctx();
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.frequency.value = 880;
+            gain.gain.value = 0.04;
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.start();
+            setTimeout(function () { osc.stop(); ctx.close(); }, 120);
+        } catch (e) {}
+    }
+
+    function escapeText(value) { return value == null ? '' : String(value); }
+
+    /* ---------- theme and wallpaper ---------- */
+
+    var wallpapers = [
+        'linear-gradient(135deg,#e0f2fe 0%,#fce7f3 55%,#ede9fe 100%)',
+        'linear-gradient(135deg,#fde68a 0%,#fecaca 50%,#fbcfe8 100%)',
+        'linear-gradient(135deg,#bbf7d0 0%,#bfdbfe 55%,#ddd6fe 100%)',
+        'linear-gradient(135deg,#e2e8f0 0%,#c7d2fe 55%,#f5d0fe 100%)'
+    ];
+    var wallpaperIndex = 0;
+
+    function applyTheme() {
+        var dark = data.settings.theme === 'dark';
+        document.body.classList.toggle('theme-dark', dark);
+        document.body.classList.toggle('chat-bg-on', !!data.settings.chat_background);
+        var bg = $('login-bg');
+        if (bg) {
+            bg.style.background = data.settings.use_image_host ? wallpapers[wallpaperIndex] : '';
+        }
+        var chat = $('chat-area');
+        if (chat) {
+            chat.style.background = data.settings.chat_background
+                ? 'linear-gradient(135deg,rgba(224,242,254,.55),rgba(252,231,243,.55))'
+                : '';
+        }
+        var dot = $('status-dot');
+        if (dot) dot.className = 'w-3 h-3 rounded-full bg-green-500 mr-2 shadow-sm shrink-0';
+        var status = $('status-text');
+        if (status) status.textContent = '本机演示模式 · 未连接 QQ';
+    }
+
+    /* ---------- login ---------- */
+
+    function showLogin() {
+        $('login-overlay').style.display = 'flex';
+        $('login-pwd').value = '';
+        $('login-error').classList.add('hidden');
+        data.authed = false;
+        saveData();
+        applyTheme();
+    }
+
+    function doLogin() {
+        var pwd = $('login-pwd').value;
+        if (pwd === DEMO_PASSWORD) {
+            data.authed = true;
+            saveData();
+            $('login-overlay').style.display = 'none';
+            $('login-error').classList.add('hidden');
+            renderContacts();
+            applyTheme();
+            toast('已进入本机演示');
+        } else {
+            $('login-error').classList.remove('hidden');
+            $('login-pwd').value = '';
+            $('login-pwd').focus();
+        }
+    }
+
+    function doLogout() {
+        currentId = null;
+        quote = null;
+        pendingFile = null;
+        $('message-area').textContent = '';
+        $('current-chat-name').textContent = '请选择联系人';
+        $('quote-preview').classList.add('hidden');
+        $('file-preview-area').classList.add('hidden');
+        showLogin();
+    }
+
+    /* ---------- contacts ---------- */
+
+    function renderContacts() {
+        var list = $('contact-list');
+        list.textContent = '';
+        if (!data.contacts.length) {
+            var empty = document.createElement('div');
+            empty.className = 'text-center text-gray-400 text-sm mt-10';
+            empty.textContent = '暂无会话';
+            list.appendChild(empty);
+            return;
+        }
+        data.contacts.forEach(function (contact) {
+            var row = document.createElement('div');
+            row.className = 'flex items-center p-3 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors relative';
+            if (contact.id === currentId) {
+                row.className += ' bg-blue-50 border-l-4 border-blue-500';
+            }
+            row.setAttribute('data-id', contact.id);
+
+            var avatar = document.createElement('div');
+            avatar.className = 'w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold shrink-0 mr-3';
+            avatar.textContent = contact.avatar || contact.name.charAt(0);
+
+            var info = document.createElement('div');
+            info.className = 'flex-1 overflow-hidden';
+            var name = document.createElement('div');
+            name.className = 'text-sm font-semibold truncate text-gray-700';
+            name.textContent = contact.name;
+            var sub = document.createElement('div');
+            sub.className = 'text-xs text-gray-400 truncate';
+            sub.textContent = (contact.type === 'group' ? '群聊' : '私聊') + ' · ID: ' + contact.peer;
+            info.appendChild(name);
+            info.appendChild(sub);
+
+            row.appendChild(avatar);
+            row.appendChild(info);
+
+            var count = unread[contact.id] || 0;
+            if (count > 0) {
+                var badge = document.createElement('span');
+                badge.className = 'ml-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full';
+                badge.textContent = count > 99 ? '99+' : String(count);
+                row.appendChild(badge);
+            }
+
+            row.onclick = function () { switchChat(contact.id); };
+            list.appendChild(row);
+        });
+    }
+
+    function currentContact() {
+        for (var i = 0; i < data.contacts.length; i++) {
+            if (data.contacts[i].id === currentId) return data.contacts[i];
+        }
+        return null;
+    }
+
+    function switchChat(id) {
+        var contact = null;
+        for (var i = 0; i < data.contacts.length; i++) {
+            if (data.contacts[i].id === id) { contact = data.contacts[i]; break; }
+        }
+        if (!contact) return;
+        currentId = id;
+        unread[id] = 0;
+        data.unread = unread;
+        saveData();
+        quote = null;
+        $('quote-preview').classList.add('hidden');
+        $('current-chat-name').textContent = contact.name;
+        $('input-box').disabled = false;
+        $('send-btn').disabled = false;
+        $('input-box').focus();
+        renderContacts();
+        renderMessages();
+
+        if (window.innerWidth < 768) {
+            $('sidebar').style.display = 'none';
+            $('chat-area').classList.remove('hidden');
+            $('chat-area').classList.add('flex');
+        }
+    }
+
+    /* ---------- messages ---------- */
+
+    function isSelf(message) { return message.from === 'me'; }
+
+    function buildQuote(quote) {
+        var box = document.createElement('div');
+        box.className = 'mb-2 px-2 py-1.5 rounded text-xs border-l-4 border-gray-400/50 bg-black/10 opacity-90 truncate';
+        var name = document.createElement('span');
+        name.className = 'font-semibold';
+        name.textContent = quote.name || '某人';
+        box.appendChild(name);
+        box.appendChild(document.createTextNode(': ' + escapeText(quote.text)));
+        return box;
+    }
+
+    function appendMessage(message) {
+        var area = $('message-area');
+        var row = document.createElement('div');
+
+        if (message.recalled) {
+            row.className = 'w-full flex justify-center mb-4';
+            var tip = document.createElement('div');
+            tip.className = 'text-xs text-gray-400 bg-gray-200 px-3 py-1 rounded-full';
+            tip.textContent = '「' + (message.from === 'me' ? '我' : (message.senderName || message.name || '对方')) + '」撤回了一条消息';
+            row.appendChild(tip);
+            area.appendChild(row);
+            return;
+        }
+
+        var self = isSelf(message);
+        row.className = 'w-full flex mb-4 ' + (self ? 'justify-end' : 'justify-start');
+
+        var col = document.createElement('div');
+        col.className = 'flex flex-col ' + (self ? 'items-end' : 'items-start') + ' max-w-[85%] md:max-w-[75%]';
+
+        var meta = document.createElement('div');
+        meta.className = 'text-[10px] md:text-xs text-gray-400 mb-1 px-1 whitespace-nowrap';
+        var sender = self ? '我' : (message.name || (currentContact() && currentContact().name) || '对方');
+        meta.textContent = sender + ' · ' + message.time;
+        col.appendChild(meta);
+
+        var bubble = document.createElement('div');
+        bubble.className = 'rounded-2xl text-sm break-words shadow-sm whitespace-pre-wrap cursor-context-menu ' +
+            (self ? 'bg-blue-500 text-white rounded-tr-sm px-3 py-1.5 md:px-4 md:py-2'
+                  : 'bg-white border border-gray-200 text-gray-800 rounded-tl-sm px-3 py-1.5 md:px-4 md:py-2');
+        bubble.style.maxWidth = '100%';
+        bubble.style.wordBreak = 'break-word';
+
+        if (message.quote) bubble.appendChild(buildQuote(message.quote));
+
+        if (message.kind === 'image') {
+            var imageBox = document.createElement('div');
+            imageBox.className = 'w-40 h-28 rounded-md flex items-center justify-center text-xs ' +
+                (self ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-400 border border-gray-200');
+            imageBox.textContent = '图片 · 本机演示占位';
+            bubble.appendChild(imageBox);
+            if (message.text && message.text !== '[图片]') {
+                var caption = document.createElement('div');
+                caption.className = 'mt-1';
+                caption.textContent = message.text;
+                bubble.appendChild(caption);
+            }
+        } else if (message.kind === 'file') {
+            var fileRow = document.createElement('div');
+            fileRow.className = 'flex items-center gap-2 py-0.5';
+            var icon = document.createElement('div');
+            icon.className = 'w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ' +
+                (self ? 'bg-white/20' : 'bg-blue-50');
+            icon.textContent = '📄';
+            var fileInfo = document.createElement('div');
+            fileInfo.className = 'min-w-0 flex-1';
+            var fileName = document.createElement('div');
+            fileName.className = 'text-sm font-medium truncate';
+            fileName.textContent = message.fileName || '文件';
+            var fileSize = document.createElement('div');
+            fileSize.className = 'text-[11px] opacity-70';
+            fileSize.textContent = formatSize(message.fileSize || 0);
+            fileInfo.appendChild(fileName);
+            fileInfo.appendChild(fileSize);
+            fileRow.appendChild(icon);
+            fileRow.appendChild(fileInfo);
+            bubble.appendChild(fileRow);
+        } else {
+            var text = document.createElement('div');
+            text.className = 'whitespace-pre-wrap';
+            text.textContent = message.text;
+            bubble.appendChild(text);
+        }
+
+        bubble.addEventListener('contextmenu', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            openContextMenu(event, message);
+        });
+
+        col.appendChild(bubble);
+        row.appendChild(col);
+        area.appendChild(row);
+    }
+
+    function renderMessages() {
+        var area = $('message-area');
+        area.textContent = '';
+        var contact = currentContact();
+        if (!contact) return;
+        contact.messages.forEach(appendMessage);
+        area.scrollTop = area.scrollHeight;
+    }
+
+    function formatSize(size) {
+        if (size < 1024) return size + ' B';
+        if (size < 1024 * 1024) return (size / 1024).toFixed(1) + ' KB';
+        return (size / 1024 / 1024).toFixed(2) + ' MB';
+    }
+
+    /* ---------- context menu ---------- */
+
+    function openContextMenu(event, message) {
+        var menu = $('context-menu');
+        menu.classList.add('show');
+        menu.style.visibility = 'visible';
+        var width = menu.offsetWidth || 96;
+        var height = menu.offsetHeight || 76;
+        var left = event.clientX;
+        var top = event.clientY;
+        if (left + width > window.innerWidth) left -= width;
+        if (top + height > window.innerHeight) top -= height;
+        menu.style.left = Math.max(4, left) + 'px';
+        menu.style.top = Math.max(4, top) + 'px';
+        $('ctx-recall').style.display = isSelf(message) ? 'block' : 'none';
+        $('ctx-reply').onclick = function () {
+            quote = { id: message.id, name: isSelf(message) ? '我' : (message.name || '对方'), text: message.text };
+            $('quote-text').textContent = '引用: ' + quote.text;
+            $('quote-preview').classList.remove('hidden');
+            hideContextMenu();
+            $('input-box').focus();
+        };
+        $('ctx-recall').onclick = function () {
+            hideContextMenu();
+            if (!isSelf(message)) return;
+            message.recalled = true;
+            saveData();
+            renderMessages();
+            toast('已撤回（仅本机演示）');
+        };
+    }
+
+    window.hideContextMenu = function () {
+        var menu = $('context-menu');
+        menu.classList.remove('show');
+        menu.style.visibility = 'hidden';
+    };
+
+    /* ---------- send ---------- */
+
+    function sendMessage() {
+        var contact = currentContact();
+        if (!contact) return;
+        var text = $('input-box').value.trim();
+        if (!text && !pendingFile) return;
+        var message = {
+            id: 'm' + Date.now(),
+            from: 'me',
+            text: text,
+            time: nowTime()
+        };
+        if (quote) message.quote = quote;
+        if (pendingFile) {
+            message.kind = pendingFile.kind;
+            message.fileName = pendingFile.name;
+            message.fileSize = pendingFile.size;
+            if (pendingFile.kind === 'image') message.text = message.text || '[图片]';
+        }
+        contact.messages.push(message);
+        if (contact.messages.length > MAX_MESSAGES) contact.messages.shift();
+        saveData();
+        $('input-box').value = '';
+        $('input-box').style.height = '38px';
+        quote = null;
+        $('quote-preview').classList.add('hidden');
+        clearFile();
+        appendMessage(message);
+        var area = $('message-area');
+        area.scrollTop = area.scrollHeight;
+        playBeep();
+        toast('已添加（本机演示，不会发送）');
+    }
+
+    /* ---------- file selection ---------- */
+
+    function clearFile() {
+        pendingFile = null;
+        $('file-preview-area').classList.add('hidden');
+        $('preview-percent').classList.add('hidden');
+        $('upload-progress-bar').style.width = '0%';
+        $('preview-img').classList.add('hidden');
+        $('preview-file-icon').classList.add('hidden');
+        $('image-input').value = '';
+        $('file-input').value = '';
+    }
+
+    function selectFile(file, isImage) {
+        if (!file) return;
+        pendingFile = { kind: isImage ? 'image' : 'file', name: file.name, size: file.size };
+        $('file-preview-area').classList.remove('hidden');
+        $('preview-filename').textContent = file.name;
+        $('preview-filesize').textContent = formatSize(file.size);
+        $('preview-percent').classList.add('hidden');
+        $('upload-progress-bar').style.width = '100%';
+        $('preview-img').classList.add('hidden');
+        $('preview-file-icon').classList.remove('hidden');
+    }
+
+    /* ---------- settings ---------- */
+
+    var settingsTab = 'whitelist';
+
+    function openSettings() {
+        var modal = $('settings-modal');
+        modal.classList.remove('hidden');
+        renderSettingsTab(settingsTab);
+        updateTabs();
+    }
+
+    function closeSettings() {
+        $('settings-modal').classList.add('hidden');
+    }
+
+    function updateTabs() {
+        var tabs = document.querySelectorAll('.set-tab');
+        for (var i = 0; i < tabs.length; i++) {
+            var active = tabs[i].getAttribute('data-tab') === settingsTab;
+            tabs[i].className = 'set-tab w-full text-left px-3 py-2 rounded-lg text-sm mb-1 ' +
+                (active ? 'bg-blue-50 text-blue-600 font-semibold' : 'text-gray-600 hover:bg-gray-100');
+        }
+    }
+
+    window.switchSettingsTab = function (tab) {
+        collectSettingsTab();
+        settingsTab = tab;
+        renderSettingsTab(tab);
+        updateTabs();
+    };
+
+    function renderSettingsTab(tab) {
+        var body = $('settings-body');
+        body.textContent = '';
+        var s = data.settings;
+
+        function title(text) {
+            var el = document.createElement('div');
+            el.className = 'text-sm font-semibold text-gray-800 mb-2';
+            el.textContent = text;
+            return el;
+        }
+        function hint(text) {
+            var el = document.createElement('p');
+            el.className = 'text-xs text-gray-400 mb-3';
+            el.textContent = text;
+            return el;
+        }
+        function textarea(id, label, value) {
+            var wrap = document.createElement('div');
+            wrap.className = 'mb-4';
+            var lab = document.createElement('label');
+            lab.className = 'block text-sm mb-1';
+            lab.textContent = label;
+            lab.setAttribute('for', id);
+            var area = document.createElement('textarea');
+            area.id = id;
+            area.className = 'w-full h-32 border border-gray-300 rounded-lg p-3 text-sm outline-none focus:border-blue-500';
+            area.value = value || '';
+            wrap.appendChild(lab);
+            wrap.appendChild(area);
+            return wrap;
+        }
+
+        if (tab === 'whitelist') {
+            body.appendChild(title('白名单设置'));
+            body.appendChild(hint('演示配置，仅保存在本机，不会控制真实账号或消息。每行一个。'));
+            body.appendChild(textarea('set-whitelist', '白名单', s.whitelist));
+        } else if (tab === 'blacklist') {
+            body.appendChild(title('黑名单设置'));
+            body.appendChild(hint('演示配置，仅保存在本机，不会控制真实账号或消息。每行一个。'));
+            body.appendChild(textarea('set-blacklist', '黑名单', s.blacklist));
+        } else if (tab === 'admin') {
+            body.appendChild(title('管理员设置'));
+            body.appendChild(hint('演示配置，仅保存在本机；不会授予真实管理权限。'));
+            body.appendChild(textarea('set-admin', '管理员 QQ 号（示例）', s.admin));
+        } else if (tab === 'background') {
+            body.appendChild(title('背景设置'));
+            body.appendChild(hint('演示页使用本地渐变代替网络图床。'));
+            body.appendChild(radioGroup('是否显示登录页背景', 'set-image-host', s.use_image_host));
+            body.appendChild(radioGroup('聊天背景', 'set-chat-bg', s.chat_background));
+        } else if (tab === 'color') {
+            body.appendChild(title('颜色设置'));
+            body.appendChild(hint('主题仅影响当前浏览器演示。'));
+            body.appendChild(radioGroup('主题', 'set-theme', s.theme === 'dark', 'dark', 'light'));
+        } else if (tab === 'sound') {
+            body.appendChild(title('提示音设置'));
+            body.appendChild(hint('使用浏览器合成短音，不加载外部音频。'));
+            body.appendChild(radioGroup('提示音', 'set-sound', s.sound_enabled));
+            var listen = document.createElement('button');
+            listen.type = 'button';
+            listen.className = 'mt-2 px-3 py-1.5 text-sm rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50';
+            listen.textContent = '试听';
+            listen.onclick = function () {
+                var old = data.settings.sound_enabled;
+                data.settings.sound_enabled = true;
+                playBeep();
+                data.settings.sound_enabled = old;
+            };
+            body.appendChild(listen);
+        } else {
+            body.appendChild(title('关于 QQ Web Chat 演示'));
+            var info = document.createElement('div');
+            info.className = 'text-sm text-gray-600 space-y-2';
+            var p1 = document.createElement('p');
+            p1.textContent = '纯静态界面演示 · 不连接 QQ、NapCat 或任何后端';
+            var p2 = document.createElement('p');
+            p2.textContent = '示例联系人与消息均为虚构；数据仅保存在本机浏览器';
+            var p3 = document.createElement('p');
+            p3.textContent = '演示密码：admin';
+            info.appendChild(p1); info.appendChild(p2); info.appendChild(p3);
+            body.appendChild(info);
+        }
+        $('settings-save').disabled = false;
+    }
+
+    function radioGroup(labelText, name, checked, checkedValue, otherValue) {
+        var wrap = document.createElement('div');
+        wrap.className = 'mb-4';
+        var label = document.createElement('span');
+        label.className = 'text-sm mr-4';
+        label.textContent = labelText;
+        wrap.appendChild(label);
+        var values = checkedValue !== undefined ? [checkedValue, otherValue] : ['yes', 'no'];
+        values.forEach(function (value, index) {
+            var lab = document.createElement('label');
+            lab.className = 'inline-flex items-center mr-6';
+            var input = document.createElement('input');
+            input.type = 'radio';
+            input.name = name;
+            if (value !== 'dark' && value !== 'light') input.value = value;
+            else input.value = value;
+            input.checked = index === 0 ? checked : !checked;
+            var span = document.createElement('span');
+            span.className = 'ml-2 text-sm';
+            span.textContent = value === 'yes' ? '是' : value === 'no' ? '否' : value === 'dark' ? '黑' : value === 'light' ? '白' : value;
+            lab.appendChild(input);
+            lab.appendChild(span);
+            wrap.appendChild(lab);
+        });
+        return wrap;
+    }
+
+    function collectSettingsTab() {
+        var s = data.settings;
+        if (settingsTab === 'whitelist') {
+            var w = $('set-whitelist'); if (w) s.whitelist = w.value;
+        } else if (settingsTab === 'blacklist') {
+            var b = $('set-blacklist'); if (b) s.blacklist = b.value;
+        } else if (settingsTab === 'admin') {
+            var a = $('set-admin'); if (a) s.admin = a.value;
+        } else if (settingsTab === 'background') {
+            var img = document.querySelector('input[name="set-image-host"]:checked');
+            if (img) s.use_image_host = img.value === 'yes';
+            var bg = document.querySelector('input[name="set-chat-bg"]:checked');
+            if (bg) s.chat_background = bg.value === 'yes';
+        } else if (settingsTab === 'color') {
+            var theme = document.querySelector('input[name="set-theme"]:checked');
+            if (theme) s.theme = theme.value;
+        } else if (settingsTab === 'sound') {
+            var sound = document.querySelector('input[name="set-sound"]:checked');
+            if (sound) s.sound_enabled = sound.value === 'yes';
+        }
+    }
+
+    function saveSettings() {
+        collectSettingsTab();
+        saveData();
+        applyTheme();
+        closeSettings();
+        toast('设置已保存（本机演示）');
+    }
+
+    /* ---------- wallpaper buttons ---------- */
+
+    function randomWallpaper() {
+        wallpaperIndex = (wallpaperIndex + 1) % wallpapers.length;
+        applyTheme();
+        toast('已切换本机演示背景');
+    }
+
+    /* ---------- wiring ---------- */
+
+    function bind() {
+        $('login-btn').onclick = doLogin;
+        $('login-pwd').onkeydown = function (e) {
+            if (e.key === 'Enter' || e.keyCode === 13) doLogin();
+        };
+        $('logout-btn').onclick = doLogout;
+        $('settings-btn').onclick = openSettings;
+        $('settings-mask').onclick = closeSettings;
+        $('settings-cancel').onclick = closeSettings;
+        $('settings-save').onclick = saveSettings;
+        $('refresh-bg-btn').onclick = randomWallpaper;
+        $('back-btn').onclick = function () {
+            $('sidebar').style.display = '';
+            $('chat-area').classList.add('hidden');
+            $('chat-area').classList.remove('flex');
+        };
+        $('cancel-quote').onclick = function () {
+            quote = null;
+            $('quote-preview').classList.add('hidden');
+        };
+        $('cancel-file').onclick = clearFile;
+        $('btn-image').onclick = function () { $('image-input').click(); };
+        $('btn-file').onclick = function () { $('file-input').click(); };
+        $('image-input').onchange = function () { selectFile(this.files && this.files[0], true); };
+        $('file-input').onchange = function () { selectFile(this.files && this.files[0], false); };
+        $('send-btn').onclick = sendMessage;
+        $('input-box').onkeydown = function (e) {
+            if ((e.key === 'Enter' || e.keyCode === 13) && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        };
+        $('save-wallpaper-btn').hidden = true;
+
+        document.addEventListener('click', function (e) {
+            if (!$('context-menu').contains(e.target)) window.hideContextMenu();
+        });
+        window.addEventListener('resize', function () { window.hideContextMenu(); });
+
+        $('login-title-svg').style.opacity = '1';
+        setTimeout(function () {
+            var svg = $('login-title-svg');
+            svg.classList.add('title-pink');
+            setTimeout(function () {
+                svg.classList.remove('title-pink');
+                svg.classList.add('title-bold');
+            }, 1500);
+        }, 300);
+    }
+
+    function start() {
+        bind();
+        applyTheme();
+        renderContacts();
+        if (data.authed) {
+            $('login-overlay').style.display = 'none';
+            var first = data.contacts[0];
+            if (first) switchChat(first.id);
+        } else {
+            $('login-overlay').style.display = 'flex';
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', start);
+    } else {
+        start();
+    }
 })();
+
 </script>
-</body></html>
+</body>
+</html>
