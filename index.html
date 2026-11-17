@@ -232,6 +232,7 @@
         </div>
 
 <script>
+
 /*
  * QQ Web Chat static demo.
  * Pure front-end simulation: no network, no backend, no real accounts.
@@ -417,6 +418,7 @@
         $('quote-preview').classList.add('hidden');
         $('file-preview-area').classList.add('hidden');
         showLogin();
+        if (window.__nestStart) window.__nestStart();
     }
 
     /* ---------- contacts ---------- */
@@ -899,6 +901,142 @@
 
     /* ---------- wiring ---------- */
 
+
+    /* ---------- login animations (same behavior as the production page) ---------- */
+
+    function reducedMotion() {
+        return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
+    function enableCardAfterIntro() {
+        var card = $('login-card');
+        if (!card) return;
+        function reveal() {
+            card.style.pointerEvents = 'auto';
+            card.style.opacity = '1';
+            card.style.transform = 'none';
+            Array.prototype.forEach.call(card.children, function (child) {
+                child.style.opacity = '1';
+                child.style.transform = 'none';
+            });
+        }
+        card.style.pointerEvents = 'auto';
+        card.addEventListener('animationend', function () { card.style.pointerEvents = 'auto'; });
+        if (!card.animate || reducedMotion()) reveal();
+        else setTimeout(reveal, 4000);
+    }
+
+    function animateTitleStrokes() {
+        var svg = $('login-title-svg');
+        if (!svg) return;
+        svg.style.opacity = '1';
+        if (reducedMotion() || !svg.animate) return;
+        var TOTAL_MS = 3000, GAP = 25;
+        var items = Array.prototype.map.call(svg.querySelectorAll('path'), function (p) {
+            var len = 0;
+            try { len = p.getTotalLength(); } catch (e) {}
+            return { p: p, len: len };
+        }).filter(function (i) { return i.len > 0; });
+        if (!items.length) return;
+        var sum = items.reduce(function (a, i) { return a + i.len; }, 0);
+        var drawBudget = TOTAL_MS - GAP * (items.length - 1);
+        setTimeout(function () { svg.classList.add('title-pink'); }, TOTAL_MS + 120);
+        setTimeout(function () {
+            svg.classList.remove('title-pink');
+            svg.classList.add('title-bold');
+        }, TOTAL_MS + 1500);
+        var t = 0;
+        items.forEach(function (i) {
+            i.p.style.strokeDasharray = i.len;
+            i.p.style.strokeDashoffset = i.len;
+            var dur = Math.max(50, drawBudget * i.len / sum);
+            if (typeof i.p.animate !== 'function') { i.p.style.strokeDashoffset = '0'; return; }
+            i.p.animate(
+                [{ strokeDashoffset: i.len }, { strokeDashoffset: 0 }],
+                { duration: dur, delay: t, easing: 'ease-in-out', fill: 'forwards' }
+            );
+            t += dur + GAP;
+        });
+    }
+
+    function canvasNest() {
+        var host = $('login-bg');
+        var overlay = $('login-overlay');
+        if (!host || !overlay) return;
+        var canvas = document.createElement('canvas');
+        var settings = { o: 0.55, c: '244,114,182', n: 150 };
+        var context;
+        try { context = canvas.getContext('2d'); } catch (e) { return; }
+        if (!context || !window.requestAnimationFrame || reducedMotion()) return;
+        var width, height;
+        var mouse = { x: null, y: null, max: 20000 };
+        canvas.id = 'demo-nest';
+        canvas.style.cssText = 'position:absolute;top:0;left:0;z-index:0;opacity:' + settings.o;
+        host.appendChild(canvas);
+        function resize() {
+            width = canvas.width = host.clientWidth;
+            height = canvas.height = host.clientHeight;
+        }
+        function draw() {
+            if (overlay.style.display === 'none') return;
+            requestAnimationFrame(draw);
+            if (!width || !height) { resize(); return; }
+            context.clearRect(0, 0, width, height);
+            var all = [mouse].concat(dots);
+            dots.forEach(function (dot) {
+                dot.x += dot.xa;
+                dot.y += dot.ya;
+                dot.xa *= dot.x > width || dot.x < 0 ? -1 : 1;
+                dot.ya *= dot.y > height || dot.y < 0 ? -1 : 1;
+                context.fillStyle = 'rgba(' + settings.c + ',0.9)';
+                context.fillRect(dot.x - 0.5, dot.y - 0.5, 1, 1);
+                for (var v = 0; v < all.length; v++) {
+                    var other = all[v];
+                    if (dot === other || other.x === null || other.y === null) continue;
+                    var dx = dot.x - other.x;
+                    var dy = dot.y - other.y;
+                    var dist = dx * dx + dy * dy;
+                    if (dist >= other.max) continue;
+                    if (other === mouse && dist >= other.max / 2) {
+                        dot.x -= 0.03 * dx;
+                        dot.y -= 0.03 * dy;
+                    }
+                    var alpha = (other.max - dist) / other.max;
+                    context.beginPath();
+                    context.lineWidth = 0.8 + alpha * 0.6;
+                    context.strokeStyle = 'rgba(' + settings.c + ',' + (alpha + 0.2) + ')';
+                    context.moveTo(dot.x, dot.y);
+                    context.lineTo(other.x, other.y);
+                    context.stroke();
+                }
+                all.splice(all.indexOf(dot), 1);
+            });
+        }
+        resize();
+        window.addEventListener('resize', resize);
+        window.addEventListener('mousemove', function (event) {
+            event = event || window.event;
+            mouse.x = event.clientX;
+            mouse.y = event.clientY;
+        });
+        window.addEventListener('mouseout', function () {
+            mouse.x = null;
+            mouse.y = null;
+        });
+        var dots = [];
+        for (var i = 0; i < settings.n; i++) {
+            dots.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                xa: 2 * Math.random() - 1,
+                ya: 2 * Math.random() - 1,
+                max: 6000
+            });
+        }
+        window.__nestStart = function () { requestAnimationFrame(draw); };
+        setTimeout(draw, 100);
+    }
+
     function bind() {
         $('login-btn').onclick = doLogin;
         $('login-pwd').onkeydown = function (e) {
@@ -938,15 +1076,9 @@
         });
         window.addEventListener('resize', function () { window.hideContextMenu(); });
 
-        $('login-title-svg').style.opacity = '1';
-        setTimeout(function () {
-            var svg = $('login-title-svg');
-            svg.classList.add('title-pink');
-            setTimeout(function () {
-                svg.classList.remove('title-pink');
-                svg.classList.add('title-bold');
-            }, 1500);
-        }, 300);
+        enableCardAfterIntro();
+        animateTitleStrokes();
+        canvasNest();
     }
 
     function start() {
@@ -968,6 +1100,7 @@
         start();
     }
 })();
+
 
 </script>
 </body>
